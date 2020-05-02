@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Lockscreen version="1" frameRate="60" screenWidth="1080" >	
+
+	<Var name="aaa" expression="int(#date/10)" />
+	<Var name="bbb" expression="int(#date%10)" />
+	<Var name="ccc" expression="int(#hour24/10)" />
+	<Var name="ddd" expression="int(#hour24%10)" />
+	<Var name="eee" expression="ifelse(eq(#hour12,0),1,int(#hour12/10))" />
+	<Var name="fff" expression="ifelse(eq(#hour12,0),2,int(#hour12%10))" />
+	<Group visibility="eq(#time_format,1)">
+		<Text x="497" y="290" align="center" alignV="center" color="#ffffff" size="176" textExp="#ccc"/>
+		<Text x="591" y="290" align="center" alignV="center" color="#ffffff" size="176" textExp="#ddd"/>
+	</Group>
+<Var name="mkm" expression="ifelse(eq(#hour24>15,0),1,0" />
+<Group visibility="eq(#hour24,>18)">
+<Text x="540" y="1390" align="center" alignV="center" color="#ff0000" size="72" format="%d%%" paras="#battery_level" />
+      </Group>  
+
+	<Group visibility="eq(#time_format,0)">
+		<Text x="497" y="290" align="center" alignV="center" color="#ffffff" size="176" textExp="#eee"/>
+		<Text x="591" y="290" align="center" alignV="center" color="#ffffff" size="176" textExp="#fff"/>
+	</Group>
+	<Text x="497" y="468" align="center" alignV="center" color="#ffffff" size="176" textExp="int(#minute/10)"/>
+	<Text x="591" y="468" align="center" alignV="center"  color="#ffffff" size="176" textExp="int(#minute%10)"/>
+
+<Text x="650" y="528" align="center" alignV="center" color="#ffffff" size="40" textExp="int(#second/10)"/>
+<Text x="670" y="528" align="center" alignV="center" color="#ffffff" size="40" textExp="int(#second%10)"/>
+
+
+	<Text x="540" y="#screen_height-112" align="center" alignV="center"  color="#ffffff" size="36" text="Mukesh Mahato" />	
+
+<Var const="true" expression="100" name="scan_time"/>
+   <Var expression="min(#scan_time,#unlock_flag*(#time_sys-#touch_begin_time))" name="unlock_time"/>
+
+<Button h="150" w="150" x="465" y="2028">
+<Triggers>
+<Trigger action="down">
+<VariableCommand const="true" expression="1" name="unlock_flag"/>
+<Command target="scan_finger.visibility" value="true"/>
+<Command target="vantay_id.animation" value="play"/></Trigger><Trigger action="up">
+<ExternCommand command="unlock" condition="eq(#unlock_time,#scan_time)"/>
+<Command target="scan_finger.visibility" value="false"/>
+<VariableCommand const="true" expression="0" name="unlock_flag"/>
+</Trigger>
+<Trigger action="cancel">
+<VariableCommand const="true" expression="0" name="unlock_flag"/>
+<Command target="scan_finger.visibility" value="false"/>
+</Trigger>
+</Triggers>
+</Button>
+  
+
+	<!-- 上午下午 -->
+	<DateTime x="730" y="528" align="center" alignV="center" color="#ffffff" format="a" size="36" alpha="255" visibility="eq(#time_format,0)"/>
+	
+	
+	
+	<!--英文日期-->
+	<DateTime x="540" align="center" alignV="center" y="615" color="#ffffff" size="36" format="EEEE MM.dd" />	
+
+<!--   <VariableBinders>
+   <SensorBinder type="accelerometer"> 
+    <Variable name="x_acc" index="0"/> 
+    <Variable name="y_acc" index="1"/>
+   </SensorBinder> 
+  </VariableBinders> -->
+
+   
+
+
+   <Image src="hei.jpg" category="BatteryFull"/>
+
+   
+
+
+
+
+
+
+
+
+  <Image  x="480" y="960" src="dianliang.png" srcid="int((#battery_level)/10)" category="Charging" align="center" alignV="center" paras="#battery_level"/>
+  <Image  x="500" y="960" src="dianliang.png" srcid="int((#battery_level)%10)"  category="Charging"  align="center" alignV="center" paras="#battery_level"/>
+  <Image  x="520" y="960"  src="%.png" align="center" alignV="center" category="Charging"  paras="#battery_level"/>
+
+
+
+<Group y="200">
+
+	<Time x="540" y="367" align="center" alignV="center" src="time.png"/>
+  <Group x="140" y="220" >
+  <Image x="200" y="230" srcid="#year/1000" src="date.png"/>
+  <Image x="200+25" y="230" srcid="#year/100%10" src="date.png"/>
+  <Image x="200+50" y="230"  srcid="#year%100/10" src="date.png"/>
+  <Image x="200+75" y="230"  srcid="#year%10" src="date.png"/>
+  <Image x="200+105" y="227" src="dot.png"/>
+  <Image x="200+130" y="230" src="date.png" srcid="(#month+1)/10"/>
+  <Image x="200+155" y="230" src="date.png" srcid="(#month+1)%10"/>
+  <Image x="200+180" y="227" src="dot.png"/>
+  <Image x="200+205" y="230" src="date.png" srcid="#date/10"/>
+  <Image x="200+230" y="230" src="date.png" srcid="#date%10"/>
+  <Image x="200+300" y="242" src="week.png" srcid="#day_of_week" w="95" h="30"/>
+</Group>  
+
+</Group>
+
+  <Var name="unlock_dist" expression="300" const="true"/>
+  <Var name="move_dx" expression="(#touch_x-#touch_begin_x)"/>
+  <Var name="move_dy" expression="(#touch_y-#touch_begin_y)"/>
+  <Var name="move_radius" expression="sqrt(#move_dx*#move_dx+#move_dy*#move_dy)"/>
+  <Var name="mask1_radius" expression="min(#unlock_dist,#unlocker.move_dist)"/> 
+    
+
+<Var name="charge_ani">
+    	<VariableAnimation >
+    		<AniFrame value="0" time="0" />
+    		<AniFrame value="73" time="3524"/>
+     	</VariableAnimation>
+    </Var>
+
+<Var name="charge_port">
+    	<VariableAnimation >
+    		<AniFrame value="0" time="0" />
+    		<AniFrame value="23" time="500"/>
+     	</VariableAnimation>
+    </Var>
+
+    
+    <Group visibility="eq(#battery_state,1)+eq(#battery_state,3)" >
+
+    	<Image x="540" y="1390" align="center" alignV="center" src="charge/charging_circle.png" srcid="#charge_ani" />
+<Image x="540" y="2340" align="center" alignV="bottom" src="loop/kgd_wired_charging_lizi_loop.png" srcid="#charge_port" />
+    	<Image x="540" y="1390" align="center" alignV="center" src="charge/charging_circle_effect_overlayer.png" />
+
+       	<Image x="540" y="1322" align="center" alignV="center" src="charge/fastcharging.png" />
+    	<Image x="540" y="1472" align="center" alignV="center" src="charge/flash_logo.png" />
+
+    	<Text x="540" y="1390" align="center" alignV="center" color="#ffffff" size="72" format="%d%%" paras="#battery_level" />
+    
+    </Group>
+    
+</Lockscreen>
